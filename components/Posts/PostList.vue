@@ -2,25 +2,13 @@
   <div>
     <section class="post-list">
       <PostPreview
-        id="1"
+        v-for="post in posts"
+        :key="post.id"
+        :id="post.id"
         :is-admin="isAdmin"
-        thumbnail="https://images.unsplash.com/photo-1567815883115-bcf719bdc8ad?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2851&q=80"
-        title="Hello THere"
-        previewText="This is my first post"
-      />
-      <PostPreview
-        id="2"
-        :is-admin="isAdmin"
-        thumbnail="https://images.unsplash.com/photo-1567815883115-bcf719bdc8ad?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2851&q=80"
-        title="Hello THere second time"
-        previewText="This is my second post"
-      />
-      <PostPreview
-        id="3"
-        :is-admin="isAdmin"
-        thumbnail="https://images.unsplash.com/photo-1567815883115-bcf719bdc8ad?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2851&q=80"
-        title="Hello THere third time"
-        previewText="This is my third post"
+        :thumbnail="post.thumbnail"
+        :title="post.title"
+        :previewText="post.previewText"
       />
     </section>
   </div>
@@ -37,6 +25,15 @@ export default {
       type: Boolean,
       default: false,
       required: false
+    },
+    posts: {
+      type: Array,
+      required: true
+    }
+  },
+  computed: {
+    posts() {
+      return this.$store.getters.loadedPosts;
     }
   }
 };
