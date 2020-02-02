@@ -5,44 +5,45 @@
     </section>
   </div>
 </template>
+
 <script>
-import axios from "axios";
-import AdminPostForm from "@/components/Admin/AdminPostForm.vue";
+import AdminPostForm from "@/components/Admin/AdminPostForm";
+
 export default {
   layout: "admin",
+  middleware: ["check-login", "auth"],
   components: {
     AdminPostForm
   },
-  data() {
-    return {};
-  },
   asyncData(context) {
-    console.log(context)
-    return axios
-      .get(
-        `https://nuxt-blog-67338.firebaseio.com/posts/${context.route.params.postid}.json`
-      )
-      .then(res => {
-        console.log('res',res)
+    return context.app.$axios
+      .$get(process.env.baseUrl + "/posts/" + context.params.postid + ".json")
+      .then(data => {
         return {
-          loadedPost: { ...res.data, id: context.params.postid }
+          loadedPost: { ...data, id: context.params.postid }
         };
       })
-      .catch(e => context.error(e));
+      .catch(e => context.error());
   },
   methods: {
-    onSubmitted(editPost) {
-      this.$store.dispatch("editPost", editPost).then(() => {
+    onSubmitted(editedPost) {
+      this.$store.dispatch("editPost", editedPost).then(() => {
         this.$router.push("/admin");
       });
     }
   }
 };
 </script>
+
 <style scoped>
 .update-form {
-  max-width: 600px;
-  margin: 0 auto;
-  width: 70%;
+  width: 90%;
+  margin: 20px auto;
+}
+
+@media (min-width: 768px) {
+  .update-form {
+    width: 500px;
+  }
 }
 </style>

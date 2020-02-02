@@ -1,10 +1,13 @@
+const pkg=require('./package')
+const bodyParser=require('body-parser');
 export default {
-  mode: 'universal',
+  mode: 'universal', //client端呈现+server端路由导航等
+  //mode ->兩者模式 universal , spa
   /*
    ** Headers of the page
    */
   head: {
-    title: process.env.npm_package_name || '',
+    title: 'Nuxt-blog',
     meta: [{
         charset: 'utf-8'
       },
@@ -15,7 +18,7 @@ export default {
       {
         hid: 'description',
         name: 'description',
-        content: process.env.npm_package_description || ''
+        content: 'My first nuxt.js blog'
       }
     ],
     link: [{
@@ -32,9 +35,15 @@ export default {
   /*
    ** Customize the progress-bar color
    */
+
   loading: {
-    color: '#fff'
+    color: '#E2A553',
+    height: '4px'
   },
+  // loadingIndicator: {
+  //   name: 'wandering-cubes',
+  //   color: 'green'
+  // },
   /*
    ** Global CSS
    */
@@ -46,7 +55,9 @@ export default {
    ** Plugins to load before mounting the App
    */
   plugins: [
-    '@/plugins/element-ui'
+    '@/plugins/element-ui',
+    '~/plugins/core-component',
+    '~/plugins/date-filter'
   ],
   /*
    ** Nuxt.js dev-modules
@@ -55,7 +66,13 @@ export default {
   /*
    ** Nuxt.js modules
    */
-  modules: [],
+  modules: [
+    '@nuxtjs/axios',
+  ],
+  axios:{
+    baseUrl: process.env.BASE_URL || 'https://nuxt-blog-67338.firebaseio.com',
+    credentials:false
+  },
   /*
    ** Build configuration
    */
@@ -65,5 +82,27 @@ export default {
      ** You can extend webpack config here
      */
     extend(config, ctx) {}
+  },
+  env: {
+    baseUrl: process.env.BASE_URL || 'https://nuxt-blog-67338.firebaseio.com',
+    fbAPIKey:'AIzaSyABM2aUtbC5UcVc_aCneTA669Rh5QRvm7U'
+  },
+  router:{
+    middleware:'log',
+    extendRoutes(routes,resolve){
+      routes.push({
+        path:'*',
+        component:resolve(__dirname,'pages/index.vue')
+      })      
+    }
+  },
+  transition:{
+    name:'fade',
+    mode:'out-in'
   }
+  ,
+  serverMiddleware:[
+    bodyParser.json(),
+    '~/api'
+  ]
 }

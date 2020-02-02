@@ -7,7 +7,14 @@
     ></div>
     <div class="post-content">
       <h1>{{ title }}</h1>
-      <p>{{ previewText }}</p>
+      <p
+        style="max-height: 22px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;"
+      >
+        {{ previewText }}
+      </p>
     </div>
   </nuxt-link>
 </template>
